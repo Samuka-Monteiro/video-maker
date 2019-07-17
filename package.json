@@ -1,0 +1,19 @@
+{
+  "name": "video-maker",
+  "version": "1.0.0",
+  "description": "This is an algorithm that makes videos by is own",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Samuka-Monteiro/video-maker.git"
+  },
+  "author": "Samuel Monteiro",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Samuka-Monteiro/video-maker/issues"
+  },
+  "homepage": "https://github.com/Samuka-Monteiro/video-maker#readme"
+}
