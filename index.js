@@ -2,9 +2,7 @@ const readline = require('readline-sync')
 start = () => {
     const content = {}
 
-    askAndReturnSearchTerm = () => {
-        return readline.question('Type a Wikipedia search term: ')
-    }
+    askAndReturnSearchTerm = () => readline.question('Type a Wikipedia search term: ')
 
     askAndReturnPrefix = () => {
         const prefixes = [
