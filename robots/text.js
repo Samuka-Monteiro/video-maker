@@ -1,6 +1,14 @@
 const algorithmia = require('algorithmia')
 const algorithmiaApiKey = require('../credentials/credentials.json').apiKey
 const sentenceBoundaryDetection = require('sbd')
+const NaturalLanguageUnderstandingV1 = require('ibm-watson/natural-language-understanding/v1.js');
+const nlu = new NaturalLanguageUnderstandingV1({
+    username: "cLJUs97rNmoFCyDHvoD3MBBOZ0zCpnnBSE2G58haWxTw",
+    password: "cLJUs97rNmoFCyDHvoD3MBBOZ0zCpnnBSE2G58haWxTw",
+    iam_apikey: "cLJUs97rNmoFCyDHvoD3MBBOZ0zCpnnBSE2G58haWxTw",
+    version: '2018-04-05',
+    url: 'https://gateway-lon.watsonplatform.net/natural-language-understanding/api'
+});
 
 robot = async (content) => {
 
@@ -31,7 +39,7 @@ robot = async (content) => {
 
         breakContentIntoSentences = (content) => {
             content.sentences = []
-            
+
             const sentences = sentenceBoundaryDetection.sentences(content.sourceContentSinitized)
             sentences.forEach(sentence => {
                 content.sentences.push({
@@ -48,9 +56,37 @@ robot = async (content) => {
         content.sourceContentSinitized = withoutDatesInParentheses
     }
 
+    limitMaximumSentences = content => content.sentences = content.sentences.slice(0, content.maximunSentences)
+
+    fetchKeyWordsOfAllSentences = async (content) => {
+        for (const sentence of content.sentences) {
+            sentence.keywords = await fetchWastonAndReturnKeywords(sentence.text)
+        }
+    }
+
+    fetchWastonAndReturnKeywords = async (sentence) => {
+        return new Promise((resolve, reject) => {
+            nlu.analyze({
+                text: sentence,
+                features: {
+                    keywords: {}
+                }
+            }, (error, response) => {
+                if (error)
+                    throw (error)
+
+                const keywords = response.keywords.map((keyword) => keyword.text)
+
+                resolve(keywords)
+            })
+        })
+    }
+
     await fetchContentFromWikipedia(content)
     sanitizeContent(content)
     breakContentIntoSentences(content)
+    limitMaximumSentences(content)
+    await fetchKeyWordsOfAllSentences(content)
 }
 
 module.exports = robot
