@@ -2,6 +2,8 @@ const algorithmia = require('algorithmia')
 const algorithmiaApiKey = require('../credentials/credentials.json').apiKey
 const sentenceBoundaryDetection = require('sbd')
 const NaturalLanguageUnderstandingV1 = require('ibm-watson/natural-language-understanding/v1.js');
+const state = require('./state')
+
 const nlu = new NaturalLanguageUnderstandingV1({
     username: "cLJUs97rNmoFCyDHvoD3MBBOZ0zCpnnBSE2G58haWxTw",
     password: "cLJUs97rNmoFCyDHvoD3MBBOZ0zCpnnBSE2G58haWxTw",
@@ -10,7 +12,8 @@ const nlu = new NaturalLanguageUnderstandingV1({
     url: 'https://gateway-lon.watsonplatform.net/natural-language-understanding/api'
 });
 
-robot = async (content) => {
+robot = async () => {
+    const content = state.load()
 
     fetchContentFromWikipedia = async (content) => {
         const algorithmiaAuthenticaticated = algorithmia(algorithmiaApiKey)
@@ -87,6 +90,7 @@ robot = async (content) => {
     breakContentIntoSentences(content)
     limitMaximumSentences(content)
     await fetchKeyWordsOfAllSentences(content)
+    state.save(content)
 }
 
 module.exports = robot
