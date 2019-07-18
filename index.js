@@ -6,11 +6,11 @@ const robots = {
 }
 
 start = async () => {
-    robots.input()
-    await robots.text()
+   /*  robots.input()
+    await robots.text() */
     await robots.image()
 
-    const content = robots.state.load()
+    //const content = robots.state.load()
     //console.log(content)
 }
 
