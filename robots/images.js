@@ -3,7 +3,6 @@ const google = require('googleapis').google
 const customSerach = google.customsearch('v1')
 const googleSearchCredentials = require('../credentials/google-search')
 const imageDownloader = require('image-downloader')
-const jimp = require('jimp');
 
 robot = async () => {
     const content = state.load()
@@ -60,80 +59,8 @@ robot = async () => {
         return imageUrl
     }
 
-    convertImage = async (index) => {
-        return new Promise((resolve, reject) => {
-            const inputFile = `./content/${index}-original.png`
-            const outputFile = `./content/${index}-converted.png`
-            const width = 1920
-            const height = 1080
-
-            jimp.read(inputFile).then(image => {
-                image
-                    .clone()
-                    .resize(width, height)
-                    .write(outputFile);
-
-                console.log(`Image ${index} resized`)
-                resolve()
-            }).catch(err => {
-                console.error(err);
-            });
-
-        })
-    }
-
-    convertAllImages = async content => {
-        for (let i = 0; i < content.sentences.length; i++) {
-            await convertImage(i)
-        }
-    }
-
-    createSentenceImage = async (index, sentence) => {
-        return new Promise((resolve, reject) => {
-            const outputFile = `./content/${index}-sentence.png`
-
-            let image = new jimp(1920, 1080, (err, image) => {
-                if (err) throw err
-            })
-
-            jimp.loadFont(jimp.FONT_SANS_64_WHITE)
-                .then(font => {
-                    image.print(font, 0, 0, sentence, 1080)
-                    return image
-                }).then(image => {
-                    image.write(outputFile)
-                    console.log(`Sentence ${index} created`)
-                    resolve()
-                })
-
-        })
-    }
-
-    createAllImagesSentences = async content => {
-        for (let i = 0; i < content.sentences.length; i++) {
-            await createSentenceImage(i, content.sentences[i].text)
-        }
-    }
-
-    createYoutubeThumbnail = async () => {
-        return new Promise((resolve, reject) => {
-            jimp.read('./content/0-converted.png').then(image => {
-                image
-                    .clone()
-                    .write('./content/youtube-thumbnail.jpg');
-
-                console.log(`Creating YouTube thumbnail`)
-                resolve()
-            }).catch(err => {
-                console.error(err);
-            });
-        })
-    }
     await fetchImagesOfAllSentences(content)
     await downloadAllImages(content)
-    await convertAllImages(content)
-    await createAllImagesSentences(content)
-    await createYoutubeThumbnail()
     state.save(content) 
 }
 
