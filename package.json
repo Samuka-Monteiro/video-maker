@@ -4,7 +4,8 @@
   "description": "This is an algorithm that makes videos by is own",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -22,6 +23,7 @@
     "ibm-watson": "^4.2.3",
     "image-downloader": "^3.4.2",
     "jimp": "^0.6.4",
+    "nodemon": "^1.19.1",
     "readline-sync": "^1.4.9",
     "sbd": "^1.0.16"
   }

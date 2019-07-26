@@ -35,33 +35,6 @@ robot = async () => {
         }
     }
 
-    createSentenceImage = async (index, sentence) => {
-        return new Promise((resolve, reject) => {
-            const outputFile = `./content/${index}-sentence.png`
-
-            let image = new jimp(1920, 1080, (err, image) => {
-                if (err) throw err
-            })
-
-            jimp.loadFont(jimp.FONT_SANS_64_WHITE)
-                .then(font => {
-                    image.print(font, 0, 0, sentence, 1080)
-                    return image
-                }).then(image => {
-                    image.write(outputFile)
-                    console.log(`Sentence ${index} created`)
-                    resolve()
-                })
-
-        })
-    }
-
-    createAllImagesSentences = async content => {
-        for (let i = 0; i < content.sentences.length; i++) {
-            await createSentenceImage(i, content.sentences[i].text)
-        }
-    }
-
     createYoutubeThumbnail = async () => {
         return new Promise((resolve, reject) => {
             jimp.read('./content/0-converted.png').then(image => {
@@ -105,7 +78,6 @@ robot = async () => {
     }
 
     await convertAllImages(content)
-    await createAllImagesSentences(content)
     await createYoutubeThumbnail()
     await createAfterEffectScript(content)
     await renderVideoWihtAfterEffects()
